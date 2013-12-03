@@ -1,4 +1,4 @@
-# MoipV2
+# MoipV2 [![Build Status](https://travis-ci.org/diogob/moip_v2.png)](https://travis-ci.org/diogob/moip_v2) [![Code Climate](https://codeclimate.com/github/diogob/moip_v2.png)](https://codeclimate.com/github/diogob/moip_v2)
 
 TODO: Write a gem description
 
