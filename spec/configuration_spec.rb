@@ -1,6 +1,10 @@
-require 'spec_helper'\
+require 'spec_helper'
 
-describe MoipV2::Configuration do  
+describe MoipV2::Configuration do
+  before do
+    MoipV2.reset
+  end
+
   MoipV2::Configuration::VALID_CONFIG_KEYS.each do |key|
     describe ".#{key}" do
       it 'should return the default value' do
@@ -10,8 +14,15 @@ describe MoipV2::Configuration do
   end
 
   describe '.configure' do
-    after do
-      MoipV2.reset
+
+    it "should set Refund.site using API endpoint and payments path" do
+      MoipV2.configure
+      expect(MoipV2::Refund.site.to_s).to eq "#{MoipV2.endpoint}payments/:payment_id"
+    end
+
+    it "should set Base.site using API endpoint" do
+      MoipV2.configure
+      expect(MoipV2::Base.site.to_s).to eq MoipV2.endpoint
     end
 
     MoipV2::Configuration::VALID_CONFIG_KEYS.each do |key|

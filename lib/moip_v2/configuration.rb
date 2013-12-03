@@ -1,15 +1,15 @@
 module MoipV2
   module Configuration
     VALID_CONNECTION_KEYS = [:endpoint, :user_agent, :method].freeze
-    VALID_OPTIONS_KEYS    = [:api_secret, :api_key].freeze
+    VALID_OPTIONS_KEYS    = [:api_token, :api_key].freeze
     VALID_CONFIG_KEYS     = VALID_CONNECTION_KEYS + VALID_OPTIONS_KEYS
  
-    DEFAULT_ENDPOINT    = 'http://awesome.dev/api'
+    DEFAULT_ENDPOINT    = 'https://test.moip.com.br/v2/'
     DEFAULT_METHOD      = :get
     DEFAULT_USER_AGENT  = "Awesome API Ruby Gem #{MoipV2::VERSION}".freeze
  
-    DEFAULT_API_KEY     = nil
-    DEFAULT_API_SECRET  = nil
+    DEFAULT_API_TOKEN     = nil
+    DEFAULT_API_KEY  = nil
  
     # Build accessor methods for every config options so we can do this, for example:
     #   Awesome.format = <img src="http://s2.wp.com/wp-includes/images/smilies/icon_mad.gif?m=1129645325g" alt=":x" class="wp-smiley"> ml
@@ -21,8 +21,15 @@ module MoipV2
     end
 
     def configure
-      yield self
+      yield self if block_given?
+      Base.site = self.endpoint
+      Refund.site = "#{Base.site}payments/:payment_id"
     end 
+
+    def test_mode
+      require "moip_v2/debug_requests"
+      self.endpoint = DEFAULT_ENDPOINT
+    end
 
     def options
       Hash[ * VALID_CONFIG_KEYS.map { |key| [key, send(key)] }.flatten ]
@@ -33,8 +40,8 @@ module MoipV2
       self.method     = DEFAULT_METHOD
       self.user_agent = DEFAULT_USER_AGENT
 
+      self.api_token  = DEFAULT_API_TOKEN
       self.api_key    = DEFAULT_API_KEY
-      self.api_secret = DEFAULT_API_SECRET
     end
 
   end # Configuration
