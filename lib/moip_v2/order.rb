@@ -1,4 +1,4 @@
 module MoipV2
-  class Order < ActiveResource::Base
+  class Order < Base
   end
 end
